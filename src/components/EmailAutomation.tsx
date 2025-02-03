@@ -14,7 +14,7 @@ const EmailAutomation = () => {
     setIsSubmitting(true);
     setStatusMessage("");
 
-    const apiUrl = `${import.meta.env.VITE_BASE_URL}/send-email`;
+    const apiUrl = `${import.meta.env.VITE_BASE_URL}/test-email`;
 
     try {
       const response = await fetch(apiUrl, {
