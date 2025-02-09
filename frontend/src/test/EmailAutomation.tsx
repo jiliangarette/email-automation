@@ -42,9 +42,7 @@ const EmailAutomation = () => {
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4">
       <div className="text-center">
-        <h2 className="text-2xl font-bold"> 
-          Email Automation Test
-        </h2>
+        <h2 className="text-2xl font-bold">Email Automation Test</h2>
         <p className="text-muted-foreground mt-1">
           This is a simple test for the email automation feature.
         </p>
@@ -68,7 +66,8 @@ const EmailAutomation = () => {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-[20px] py-6 px-8 cursor-pointer group">
+            className="rounded-[20px] py-6 px-8 cursor-pointer group"
+          >
             {isSubmitting ? (
               "Sending..."
             ) : (
@@ -79,9 +78,6 @@ const EmailAutomation = () => {
             )}
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground mt-2 text-center">
-          Your email will only be used to send this test message and won't be stored
-        </p>
       </form>
       {statusMessage && (
         <div className="mt-4 text-center text-sm font-semibold text-green-500">
