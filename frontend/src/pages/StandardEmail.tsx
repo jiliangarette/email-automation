@@ -3,6 +3,7 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Label } from "../components/ui/Label";
 import { ArrowRight } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
 
 const StandardEmail = () => {
   // New fields for the additional email details
@@ -11,6 +12,9 @@ const StandardEmail = () => {
   const [hiringManager, setHiringManager] = useState<string>("");
 
   const [email, setEmail] = useState<string>("");
+  // New state for the PDF file
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string>("");
 
@@ -19,6 +23,46 @@ const StandardEmail = () => {
     setIsSubmitting(true);
     setStatusMessage("");
 
+    let resumeUrl = "";
+
+    // If a PDF file was selected, upload it to Supabase Storage
+    if (pdfFile) {
+      // Create a unique file name. For example, using the applicant name and a timestamp.
+      const fileExt = pdfFile.name.split(".").pop();
+      const fileName = `${applicantName
+        .replace(/\s+/g, "-")
+        .toLowerCase()}-${Date.now()}.${fileExt}`;
+      const filePath = `resumes/${fileName}`; // Store PDFs in the "resumes" bucket
+
+      // Upload the file to Supabase
+      const { data, error: uploadError } = await supabase.storage
+        .from("resume")
+        .upload(filePath, pdfFile);
+
+      if (uploadError || !data) {
+        console.error("Error uploading file to Supabase:", uploadError);
+        setStatusMessage("Error uploading PDF. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Retrieve the public URL for the uploaded file
+      // Note: getPublicUrl is synchronous and returns an object with data.publicUrl
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("resume").getPublicUrl(filePath);
+
+      if (!publicUrl) {
+        console.error("Error getting public URL");
+        setStatusMessage("Error retrieving PDF URL. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      resumeUrl = publicUrl;
+    }
+
+    // Prepare payload for your API which now includes resumeUrl
     const apiUrl = `${import.meta.env.VITE_BASE_URL}/standard`;
 
     try {
@@ -32,6 +76,7 @@ const StandardEmail = () => {
           applicantName,
           jobPosition,
           hiringManager,
+          resumeUrl, // Pass the dynamic PDF URL here
         }),
       });
 
@@ -41,6 +86,7 @@ const StandardEmail = () => {
         setApplicantName("");
         setJobPosition("");
         setHiringManager("");
+        setPdfFile(null);
       } else {
         setStatusMessage("Failed to send email.");
       }
@@ -104,6 +150,22 @@ const StandardEmail = () => {
             placeholder="Enter recipient email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+            className="py-6 px-8"
+          />
+        </div>
+        {/* PDF File Input */}
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="pdfFile">Upload PDF Attachment (Resume)</Label>
+          <Input
+            id="pdfFile"
+            type="file"
+            accept="application/pdf"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              if (e.target.files && e.target.files[0]) {
+                setPdfFile(e.target.files[0]);
+              }
+            }}
             required
             className="py-6 px-8"
           />
