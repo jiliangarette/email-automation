@@ -10,7 +10,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const sendEmail = async (emailData) => {
-  const { email, applicantName, jobPosition, hiringManager } = emailData;
+  const { email, applicantName, jobPosition, hiringManager, resumeUrl } =
+    emailData;
+
+  // Format the applicant's name by replacing spaces with underscores
+  const formattedApplicantName = applicantName.replace(/\s+/g, "_");
+
   const templatePath = path.join(
     __dirname,
     "../templates/job-application-standard.ejs"
@@ -20,8 +25,6 @@ export const sendEmail = async (emailData) => {
     name: hiringManager,
     jobTitle: jobPosition,
     yourName: applicantName,
-    buttonLink: "https://example.com/resume.pdf",
-    buttonText: "Download Resume",
     imageUrl: "https://example.com/company-logo.png",
   });
 
@@ -44,6 +47,13 @@ ${applicantName}`;
     subject: `${applicantName} - ${jobPosition}`,
     text: textContent,
     html: htmlContent,
+    attachments: [
+      {
+        filename: `${formattedApplicantName}.pdf`,
+        path: resumeUrl,
+        contentType: "application/pdf",
+      },
+    ],
   };
 
   return await transporter.sendMail(mailOptions);

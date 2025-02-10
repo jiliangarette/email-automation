@@ -1,9 +1,16 @@
 import { sendEmail } from "../services/emailService.js";
 
 export const standardEmailController = async (req, res) => {
-  const { email, applicantName, jobPosition, hiringManager } = req.body;
+  const { email, applicantName, jobPosition, hiringManager, resumeUrl } =
+    req.body;
   try {
-    await sendEmail({ email, applicantName, jobPosition, hiringManager });
+    await sendEmail({
+      email,
+      applicantName,
+      jobPosition,
+      hiringManager,
+      resumeUrl,
+    });
     res
       .status(200)
       .send({ message: "Email sent successfully from standard template!" });
