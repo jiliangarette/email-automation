@@ -1,20 +1,23 @@
-import { useState } from "react";
-import { ArrowRight, Paperclip, X } from "lucide-react";
-import { supabase } from "../lib/supabaseClient";
-import { Card, CardContent } from "../components/ui/Card";
 import { Label } from "../components/ui/Label";
 import { Button } from "../components/ui/Button";
-import AutoResizingInput from "../components/AutoResizingInput";
 import { Separator } from "../components/ui/Separator";
+import { Card, CardContent } from "../components/ui/Card";
+import AutoResizingInput from "../components/AutoResizingInput";
+
+import { ArrowRight, Paperclip, X } from "lucide-react";
+import { supabase } from "../lib/supabaseClient";
+import { useState } from "react";
 
 const StandardEmail = () => {
   const [applicantName, setApplicantName] = useState<string>("");
-  const [jobPosition, setJobPosition] = useState<string>("");
   const [hiringManager, setHiringManager] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string>("");
+  const [jobPosition, setJobPosition] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,7 +150,7 @@ const StandardEmail = () => {
               <p className="text-sm leading-relaxed">
                 I wish to apply for the position of{" "}
                 <span className="font-medium">
-                  {jobPosition || "[Name of the Position]"}
+                  {jobPosition || "Name of the Position"}
                 </span>{" "}
                 that is listed on your website. The responsibilities outlined in
                 the job description align with my skills and experience, and I
@@ -167,12 +170,11 @@ const StandardEmail = () => {
 
               <div className="space-y-1">
                 <p className="text-sm">Sincerely,</p>
-                <p className="font-medium">{applicantName || "[Your Name]"}</p>
+                <p className="font-medium">{applicantName || "Your Name"}</p>
               </div>
             </div>
 
             <Separator />
-            {/* Attachments */}
             <div className="space-y-2">
               <Label className="text-muted-foreground text-sm">
                 Attachments
