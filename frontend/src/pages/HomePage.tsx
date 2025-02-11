@@ -32,8 +32,7 @@ export default function HomePage() {
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Standard Template</h3>
                   <p className="text-muted-foreground">
-                    Professional template with proven results. Perfect for most
-                    job applications.
+                    Professional template with proven results.
                   </p>
                 </div>
                 <div className="relative overflow-hidden rounded-xl border aspect-video bg-muted">
