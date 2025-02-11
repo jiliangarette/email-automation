@@ -3,25 +3,39 @@ import emailConfig from "../config/emailConfig.js";
 import ejs from "ejs";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
-const transporter = nodemailer.createTransport(emailConfig);
+const transporter = nodemailer.createTransport({
+  ...emailConfig,
+  pool: true,
+  maxConnections: 5,
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+let compiledTemplate = null;
+
+const getTemplate = async () => {
+  if (!compiledTemplate) {
+    const templatePath = path.join(
+      __dirname,
+      "../templates/job-application-standard.ejs"
+    );
+    const templateStr = await fs.promises.readFile(templatePath, "utf-8");
+    compiledTemplate = ejs.compile(templateStr);
+  }
+  return compiledTemplate;
+};
 
 export const sendEmail = async (emailData) => {
   const { email, applicantName, jobPosition, hiringManager, resumeUrl } =
     emailData;
 
-  // Format the applicant's name by replacing spaces with underscores
   const formattedApplicantName = applicantName.replace(/\s+/g, "_");
 
-  const templatePath = path.join(
-    __dirname,
-    "../templates/job-application-standard.ejs"
-  );
-
-  const htmlContent = await ejs.renderFile(templatePath, {
+  const template = await getTemplate();
+  const htmlContent = template({
     name: hiringManager,
     jobTitle: jobPosition,
     yourName: applicantName,
@@ -32,11 +46,17 @@ export const sendEmail = async (emailData) => {
 
 Hello ${hiringManager},
 
-I wish to apply for the position of ${jobPosition} that is listed on your website. The responsibilities outlined in the job description align with my skills and experience, and I believe I would be a valuable addition to your team.
+ I am writing to express my interest in the ${jobPosition}  position advertised on your website. My skills and experience
+                align with the responsibilities outlined in the job description,
+                and I am confident in my ability to contribute effectively to
+                your team.
 
-I have attached my resume and cover letter for your attention. I hope they can help you learn more about my background, my qualifications, and my experience.
+  Please find my resume attached for your review. I trust these
+                documents will provide you with further insight into my
+                qualifications and relevant experience.
 
-Thank you for your valuable time. I look forward to hearing from you about this job opportunity.
+  Thank you for your time and consideration. I look forward to the
+                possibility of discussing this opportunity further.
 
 Sincerely,
 ${applicantName}`;

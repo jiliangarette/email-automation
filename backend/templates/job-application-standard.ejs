@@ -5,77 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light" />
     <title>Job Application</title>
-
     <style>
-      @media only screen and (max-width: 600px) {
-        .responsive-table {
-          width: 100% !important;
-        }
-        .responsive-image {
-          height: 200px !important;
-        }
-        .gallery {
-          grid-template-columns: 1fr !important;
-        }
+      body {
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+      .email-container {
+        max-width: 600px;
+        background-color: #ffffff;
+        margin: 0 auto;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 24px;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 16px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+      }
+      p {
+        line-height: 1.6;
+        margin-bottom: 16px;
+        color: #333;
+      }
+      a {
+        color: #1f3a86;
+        text-decoration: none;
       }
       a:hover {
-        color: #1f3a86;
+        text-decoration: underline;
+      }
+      @media only screen and (max-width: 600px) {
+        .email-container {
+          padding: 16px;
+        }
       }
     </style>
   </head>
-  <body
-    style="
-      margin: 0;
-      padding-top: 8px;
-      padding-bottom: 8px;
-      font-family:
-        system-ui,
-        -apple-system,
-        sans-serif;
-      color: #1e293b;
-    "
-  >
-    <div style="display: none; max-height: 0px; overflow: hidden">
+  <body>
+    <div style="display: none; max-height: 0; overflow: hidden">
       I wish to apply for the position of <%= jobTitle %>.
     </div>
-
-    <div
-      class="email-container"
-      style="
-        width: 100%;
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 12px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      "
-    >
-      <div style="border-radius: 8px; margin-bottom: 16px">
-        <div style="font-size: 15px; line-height: 1.6; color: #333">
-          <p style="margin-bottom: 16px">
-            Hello <span style="color: #2563eb"><%= name %></span>,
-          </p>
-          <p style="margin-bottom: 16px">
-            I wish to apply for the position of
-            <span style="color: #2563eb"><%= jobTitle %></span> that is listed
-            on your website. The responsibilities outlined in the job
-            description align with my skills and experience, and I believe I
-            would be a valuable addition to your team.
-          </p>
-          <p style="margin-bottom: 16px">
-            I have attached my resume and cover letter for your attention. I
-            hope they can help you learn more about my background, my
-            qualifications, and my experience.
-          </p>
-          <p style="margin-bottom: 16px">
-            Thank you for your valuable time. I look forward to hearing from you
-            about this job opportunity.
-          </p>
-          <p style="margin-bottom: 16px">
-            Sincerely,<br />
-            <span style="color: #2563eb"><%= yourName %></span>
-          </p>
-        </div>
+    <div class="email-container">
+      <div class="header">
+        <h1>Job Application</h1>
+      </div>
+      <div>
+        <p>Hello <span style="color: #2563eb"><%= name %></span>,</p>
+        <p>
+          I am writing to express my interest in the
+          <span style="color: #2563eb"><%= jobTitle %></span> that is listed
+          position advertised on your website. My skills and experience align
+          with the responsibilities outlined in the job description, and I am
+          confident in my ability to contribute effectively to your team.
+        </p>
+        <p>
+          Please find my resume attached for your review. I trust these
+          documents will provide you with further insight into my qualifications
+          and relevant experience.
+        </p>
+        <p>
+          Thank you for your time and consideration. I look forward to the
+          possibility of discussing this opportunity further.
+        </p>
+        <p>
+          Sincerely,<br />
+          <span style="color: #2563eb"><%= yourName %></span>
+        </p>
       </div>
     </div>
   </body>
