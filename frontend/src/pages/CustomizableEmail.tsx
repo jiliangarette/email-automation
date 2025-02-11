@@ -3,20 +3,28 @@ import { Button } from "../components/ui/Button";
 import { Separator } from "../components/ui/Separator";
 import { Card, CardContent } from "../components/ui/Card";
 import AutoResizingInput from "../components/AutoResizingInput";
-
-import { ArrowRight, Paperclip, X, Loader2 } from "lucide-react";
+import { ArrowRight, Paperclip, X, Loader2, Plus } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useState, useEffect } from "react";
 
-const StandardEmail = () => {
-  const [applicantName, setApplicantName] = useState<string>("");
-  const [hiringManager, setHiringManager] = useState<string>("");
-  const [statusMessage, setStatusMessage] = useState<string>("");
-  const [jobPosition, setJobPosition] = useState<string>("");
+const CustomizableEmail = () => {
+  // General Email Info
   const [email, setEmail] = useState<string>("");
+  const [applicantName, setApplicantName] = useState<string>("");
+  const [jobPosition, setJobPosition] = useState<string>("");
 
+  // For the greeting line the backend expects a "name" for the hiring manager.
+  const [hiringManager, setHiringManager] = useState<string>("");
+
+  // Customizable fields for greeting and closing (instead of static "Hello" / "Sincerely")
+  const [customGreeting, setCustomGreeting] = useState<string>("");
+  const [customClosing, setCustomClosing] = useState<string>("");
+
+  // Dynamic paragraphs – initialize with one required paragraph
+  const [paragraphs, setParagraphs] = useState<string[]>([""]);
+
+  const [statusMessage, setStatusMessage] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
   const [pdfFile, setPdfFile] = useState<File | null>(null);
 
   useEffect(() => {
@@ -25,6 +33,28 @@ const StandardEmail = () => {
       return () => clearTimeout(timer);
     }
   }, [statusMessage]);
+
+  const addParagraph = () => {
+    if (paragraphs.length < 3) {
+      setParagraphs([...paragraphs, ""]);
+    }
+  };
+
+  const removeParagraph = (index: number) => {
+    if (paragraphs.length > 1) {
+      const newParagraphs = paragraphs.filter((_, i) => i !== index);
+      setParagraphs(newParagraphs);
+    }
+  };
+
+  const handleParagraphChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    index: number
+  ) => {
+    const newParagraphs = [...paragraphs];
+    newParagraphs[index] = e.target.value;
+    setParagraphs(newParagraphs);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +95,21 @@ const StandardEmail = () => {
       resumeUrl = publicUrl;
     }
 
-    const apiUrl = `${import.meta.env.VITE_BASE_URL}/standard`;
+    // Map our paragraphs array to the expected keys
+    const payload = {
+      email,
+      applicantName,
+      jobPosition,
+      hiringManager,
+      resumeUrl,
+      customGreeting,
+      customClosing,
+      bodyParagraph1: paragraphs[0],
+      bodyParagraph2: paragraphs[1] || "",
+      bodyParagraph3: paragraphs[2] || "",
+    };
+
+    const apiUrl = `${import.meta.env.VITE_BASE_URL}/customize-email`;
 
     try {
       const response = await fetch(apiUrl, {
@@ -73,30 +117,27 @@ const StandardEmail = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email,
-          applicantName,
-          jobPosition,
-          hiringManager,
-          resumeUrl,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         setStatusMessage(
-          "Your application was submitted! We're processing your email…"
+          "Your custom email was submitted! We're processing your email…"
         );
         setEmail("");
         setApplicantName("");
         setJobPosition("");
         setHiringManager("");
+        setCustomGreeting("");
+        setCustomClosing("");
+        setParagraphs([""]);
         setPdfFile(null);
       } else {
-        setStatusMessage("Failed to send email. Please try again.");
+        setStatusMessage("Failed to send custom email. Please try again.");
       }
     } catch (err: unknown) {
-      console.error("Error sending email:", err);
-      setStatusMessage("Error sending email. Please try again.");
+      console.error("Error sending custom email:", err);
+      setStatusMessage("Error sending custom email. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -107,6 +148,7 @@ const StandardEmail = () => {
       <form onSubmit={handleSubmit}>
         <CardContent className="p-6">
           <div className="space-y-4">
+            {/* General Email Information */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs">From:</span>
@@ -136,54 +178,84 @@ const StandardEmail = () => {
                     value={jobPosition}
                     onChange={(e) => setJobPosition(e.target.value)}
                     required
-                    placeholder="[Job Position (Reference Number)]"
+                    placeholder="[Job Position]"
                   />
                 </div>
               </div>
             </div>
 
             <Separator />
+
+            {/* Email Body Section with Dynamic Customizable Fields */}
             <div className="space-y-4 py-2">
+              {/* Updated Greeting Section: all elements in one row */}
               <div className="flex items-center gap-2">
-                <span>Hello</span>
+                <AutoResizingInput
+                  value={customGreeting}
+                  onChange={(e) => setCustomGreeting(e.target.value)}
+                  placeholder="[Greeting]"
+                  minWidth={60}
+                />
                 <AutoResizingInput
                   value={hiringManager}
                   onChange={(e) => setHiringManager(e.target.value)}
                   placeholder="[Hiring Manager]"
-                  minWidth={150}
+                  minWidth={120}
                 />
                 <span>,</span>
               </div>
 
-              <p className="text-sm leading-relaxed">
-                I am writing to express my interest in the{" "}
-                <span className="font-medium">
-                  {jobPosition || "Name of the Position"}
-                </span>{" "}
-                position advertised on your website. My skills and experience
-                align with the responsibilities outlined in the job description,
-                and I am confident in my ability to contribute effectively to
-                your team.
-              </p>
+              {/* Dynamic Body Paragraphs */}
+              <div className="space-y-4">
+                {paragraphs.map((para, index) => (
+                  <div key={index} className="relative">
+                    <textarea
+                      value={para}
+                      onChange={(e) => handleParagraphChange(e, index)}
+                      placeholder={`Enter paragraph ${index + 1}`}
+                      className="w-full rounded-md border p-2"
+                      rows={3}
+                    />
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => removeParagraph(index)}
+                        className="absolute top-0 right-0 mt-2 mr-2 text-destructive"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {paragraphs.length < 3 && (
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={addParagraph}
+                      className="flex items-center text-primary"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span className="ml-1 text-sm">Add Paragraph</span>
+                    </button>
+                  </div>
+                )}
+              </div>
 
-              <p className="text-sm leading-relaxed">
-                Please find my resume attached for your review. I trust these
-                documents will provide you with further insight into my
-                qualifications and relevant experience.
-              </p>
-
-              <p className="text-sm leading-relaxed">
-                Thank you for your time and consideration. I look forward to the
-                possibility of discussing this opportunity further.
-              </p>
-
+              {/* Closing Section */}
               <div className="space-y-1">
-                <p className="text-sm">Sincerely,</p>
+                <AutoResizingInput
+                  value={customClosing}
+                  onChange={(e) => setCustomClosing(e.target.value)}
+                  placeholder="[Closing]"
+                  minWidth={80}
+                />
                 <p className="font-medium">{applicantName || "Your Name"}</p>
               </div>
             </div>
 
             <Separator />
+
+            {/* Resume Attachment */}
             <div className="space-y-2">
               <Label className="text-muted-foreground text-sm">
                 Attachments
@@ -240,7 +312,7 @@ const StandardEmail = () => {
                   </>
                 ) : (
                   <>
-                    Send Email
+                    Send Custom Email
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -266,4 +338,4 @@ const StandardEmail = () => {
   );
 };
 
-export default StandardEmail;
+export default CustomizableEmail;
