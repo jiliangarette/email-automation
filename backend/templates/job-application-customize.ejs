@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light" />
-    <title>Email Application</title>
+    <title>Custom Email Application</title>
     <style>
       body {
         background-color: #f4f4f4;
@@ -41,34 +41,23 @@
     </style>
   </head>
   <body>
+    <!-- This hidden section provides a fallback preview text -->
     <div style="display: none; max-height: 0; overflow: hidden">
       I wish to apply for the position of <%= jobTitle %>.
     </div>
     <div class="email-container">
-      <!-- Header section removed -->
       <div>
-        <p>Hello <span style="color: #2563eb"><%= name %></span>,</p>
-        <p>
-          I am writing to express my interest in the
-          <span style="color: #2563eb"><%= jobTitle %></span> position
-          advertised on your website. My skills and experience align with the
-          responsibilities outlined in the job description, and I am confident
-          in my ability to contribute effectively to your team.
-        </p>
-        <p>
-          Please find my resume attached for your review. I trust these
-          documents will provide you with further insight into my qualifications
-          and relevant experience.
-        </p>
-        <p>
-          Thank you for your time and consideration. I look forward to the
-          possibility of discussing this opportunity further.
-        </p>
-        <p>
-          Sincerely,<br />
-          <span style="color: #2563eb"><%= yourName %></span>
-        </p>
+        <!-- Custom greeting line without the extra comma -->
+        <p><%= customGreeting %> <span style="color: #2563eb"><%= name %></span>,</p>
+        <!-- Custom body paragraphs -->
+        <% if (paragraphs && paragraphs.length > 0) { %>
+          <% paragraphs.forEach(function(para) { %>
+            <p><%= para %></p>
+          <% }); %>
+        <% } %>
+        <!-- Custom closing line -->
+        <p><%= customClosing %>,<br /><span style="color: #2563eb"><%= yourName %></span></p>
       </div>
     </div>
   </body>
-</html>
+</html> 
