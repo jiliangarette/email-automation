@@ -101,6 +101,7 @@ const CustomizableEmail = () => {
       applicantName,
       jobPosition,
       hiringManager,
+
       resumeUrl,
       customGreeting,
       customClosing,
@@ -109,7 +110,7 @@ const CustomizableEmail = () => {
       bodyParagraph3: paragraphs[2] || "",
     };
 
-    const apiUrl = `${import.meta.env.VITE_BASE_URL}/customize-email`;
+    const apiUrl = `${import.meta.env.VITE_BASE_URL}/jilian-email`;
 
     try {
       const response = await fetch(apiUrl, {

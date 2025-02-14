@@ -9,7 +9,6 @@ interface AutoResizingInputProps
   minWidth?: number;
 }
 
-// Custom auto-resizing input component
 const AutoResizingInput = ({
   value,
   onChange,
@@ -25,13 +24,11 @@ const AutoResizingInput = ({
 
   useEffect(() => {
     if (spanRef.current) {
-      // Measure the span width and add a few extra pixels for the caret
       const newWidth = spanRef.current.offsetWidth;
       setInputWidth(newWidth + 4);
     }
   }, [value, placeholder]);
 
-  // Default classes on the input: padding and a thin border
   const defaultClasses = "p-[2px] outline-gray-400 rounded-sm";
   const inputClassName = `${defaultClasses} ${className || ""}`.trim();
 
@@ -42,7 +39,6 @@ const AutoResizingInput = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        required
         className={inputClassName}
         style={{ width: inputWidth, ...style }}
         {...props}
