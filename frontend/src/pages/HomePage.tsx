@@ -17,11 +17,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <a
-              href="/standard"
-              className="group"
-              aria-label="Standard Template"
-            >
+            <a href="/standard" className="group">
               <div className="relative bg-card rounded-xl border p-6 space-y-4 transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
                 <Badge variant="secondary" className="absolute top-4 right-4">
                   Standard
