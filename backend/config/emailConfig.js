@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const emailConfig = {
-  host: "smtp.gmail.com",
+  host: "smtp.privateemail.com",
   port: 465,
   secure: true,
   auth: {
