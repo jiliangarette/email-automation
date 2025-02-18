@@ -14,7 +14,7 @@ export const sendEmail = async (email) => {
   const htmlContent = await ejs.renderFile(templatePath, {
     title: "Email Automation Testing",
     message: "This is an automated email to test the email functionality.",
-    buttonLink: "https://jiliangarette.xyz",
+    buttonLink: "https://jiliangarette.com",
     buttonText: "Visit Our Site",
     imageUrl:
       "https://i.pinimg.com/736x/cb/4e/4f/cb4e4f87176e318fce6579fd89c6cb6a.jpg",
