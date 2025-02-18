@@ -86,7 +86,118 @@
               <% } %>
               <% if (company) { %>
                 <%= company %>
-              <% } %>
+              <% } %><!doctype html>
+              <html lang="en">
+                <head>
+                  <meta charset="UTF-8" />
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  <meta name="color-scheme" content="light" />
+                  <title>Job Application - Jilian Garette A. Abangan</title>
+                  <style>
+                    @media only screen and (max-width: 600px) {
+                      .responsive-table {
+                        width: 100% !important;
+                      }
+                      .responsive-image {
+                        height: 200px !important;
+                      }
+                      .gallery {
+                        grid-template-columns: 1fr !important;
+                      }
+                    }
+                    .email-body {
+                      font-family: system-ui, -apple-system, sans-serif;
+                      background-color: #f0f4f8;
+                      color: #1e293b;
+                      padding: 20px;
+                    }
+                    .email-container {
+                      width: 90%;
+                      max-width: 600px;
+                      margin: 0 auto;
+                      background-color: #ffffff;
+                      padding: 20px;
+                      border-radius: 12px;
+                      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                    }
+                    .header {
+                      margin-bottom: 20px;
+                    }
+                    .contact-info {
+                      margin-bottom: 20px;
+                      color: #64748b;
+                    }
+                    .contact-info a {
+                      text-decoration: none;
+                      color: #64748b;
+                    }
+                    .greeting {
+                      margin-bottom: 20px;
+                    }
+                    .closing {
+                      margin-top: 20px;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <div style="display: none; max-height: 0; overflow: hidden">
+                    I wish to apply for the position of <%= jobTitle %>.
+                  </div>
+                  <div class="email-body">
+                    <div class="email-container">
+                      <div style="border-top: 1px solid #e2e8f0;">
+                        <p>Dear <span style="color: #2563eb"><%= name %></span>,</p>
+                        <% if (paragraphs && paragraphs.length > 0 && paragraphs.join('').trim() !== '') { %>
+                          <% paragraphs.forEach(function(para) { %>
+                            <p><%= para %></p>
+                          <% }); %>
+                        <% } %>
+                        <p>Thank you for your time and consideration.</p>
+                        <p>
+                          Sincerely,<br />
+                          Jilian Garette A. Abangan
+                        </p>
+                        <p>Attached is my resume for your review.</p>
+                      </div>
+              
+                      <div class="header">
+                        <p><%= new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+                        <% if (fullName || company) { %>
+                          <p>
+                            <% if (fullName) { %>
+                              <%= fullName %><br />
+                            <% } %>
+                            <% if (company) { %>
+                              <%= company %>
+                            <% } %>
+                          </p>
+                        <% } %>
+                      </div>
+              
+                      <div class="contact-info">
+                        <p>+63 966 180 8543</p>
+                        <p>
+                          <a href="https://jiliangarette.com" style="color: #1e90ff; font-weight: 600">
+                            Jiliangarette.com
+                          </a>
+                          <span style="margin: 0 5px">&bull;</span>
+                          <a href="https://github.com/jiliangarette" style="color: #1e90ff; font-weight: 600">
+                            Github
+                          </a>
+                          <span style="margin: 0 5px">&bull;</span>
+                          <a
+                            href="https://linkedin.com/in/jiliangarette"
+                            style="color: #1e90ff; font-weight: 600; vertical-align: middle"
+                          >
+                            Linkedin
+                          </a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </body>
+              </html>
+              
             </p>
           <% } %>
         </div>
