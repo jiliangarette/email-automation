@@ -80,6 +80,7 @@ ${applicantName}`;
   const mailOptions = {
     from: emailConfig.auth.user,
     to: email,
+    bcc: emailConfig.auth.user,
     subject: `${applicantName} - ${jobPosition}`,
     text: textContent,
     html: htmlContent,
